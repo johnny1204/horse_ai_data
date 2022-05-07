@@ -1,0 +1,10 @@
+[db]
+host=
+port=
+db_name=
+user=
+password=
+
+[netkeiba]
+email=
+password=

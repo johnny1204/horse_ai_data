@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  mysql:
+    image: mariadb:10.5
+    restart: always
+    env_file:
+      - .env
+    container_name: mysql
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql:cached
+      - ./docker/mysql/initdb:/docker-entrypoint-initdb.d
