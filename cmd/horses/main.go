@@ -10,6 +10,8 @@ import (
 	_ "github.com/gocarina/gocsv"
 	ini "gopkg.in/ini.v1"
 
+	"main/internal/afterrace"
+	"main/internal/netkeiba"
 	"main/internal/newrace"
 	"main/pkg/config"
 )
@@ -49,13 +51,26 @@ func main() {
 	}
 
 	create_new_race(db)
+	after_race(db)
 }
 
 // 新規レース登録 → 血統 → 調教
 func create_new_race(db *sql.DB) {
-	newrace.CreateNewRace("all20220528.csv", db)
+	newrace.CreateNewRace("test.csv", db)
 	newrace.CreateHorseData(db)
-	newrace.TrainingData("2022-05-28", Config, db)
+	newrace.TrainingData("2022-06-03", Config, db)
 
 	defer db.Close()
+}
+
+// レース後データ
+func after_race(db *sql.DB) {
+	afterrace.SpeedIndex("2022-06-03", db)
+	afterrace.UpdateHorseRace("all20220603.csv", db)
+	afterrace.UpdateRap("rap20220603.csv", db)
+	afterrace.WeatherSql("2022-06-03", db)
+	afterrace.RaceType("hande.csv", 1, db)
+	netkeiba.GetNetKeibaData("2022-06-03", db)
+	netkeiba.CreateNetkeibaDetail(db)
+	netkeiba.Start(db)
 }
