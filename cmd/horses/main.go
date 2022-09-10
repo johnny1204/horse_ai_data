@@ -14,6 +14,7 @@ import (
 	"github.com/jszwec/csvutil"
 	ini "gopkg.in/ini.v1"
 
+	"main/internal/afterrace"
 	"main/internal/data"
 	"main/internal/netkeiba"
 	"main/internal/newrace"
@@ -57,6 +58,8 @@ func main() {
 
 	create_new_race(db)
 	after_race(db)
+	haitou(db)
+	chihou(db)
 	update_horse(db)
 	get_model_date("2022-06-03", db)
 }
@@ -127,6 +130,20 @@ func after_race(db *sql.DB) {
 	// netkeiba.GetNetKeibaData("test", db)
 	netkeiba.CreateNetkeibaDetail(db)
 	netkeiba.Start(db)
+}
+
+func haitou(db *sql.DB) {
+	// afterrace.UpdateHaito("all20220909.csv", db)
+	// afterrace.UpdateFukusho("fukusho20220909_fukusho.csv", db)
+	// afterrace.ChihouHaitou(db)
+	afterrace.UpdateChihouHaitou(db)
+}
+
+func chihou(db *sql.DB) {
+	netkeiba.NetkeibaChihou(db)
+	// netkeiba.Horse()
+	// netkeiba.NetkeibaChihouRace(Config)
+	// netkeiba.NetkeibaChihouDetail(Config)
 }
 
 func compi_update() {
