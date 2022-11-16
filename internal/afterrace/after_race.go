@@ -325,8 +325,6 @@ func UpdateHorseRace(filename string, db *sql.DB) {
 			log.Fatalf("insertUser db.Exec error err:%v", err)
 		}
 	}
-
-	defer db.Close()
 }
 
 // ラップ
@@ -374,7 +372,6 @@ func UpdateRap(filename string, db *sql.DB) {
 			log.Fatalf("insertUser db.Exec error err:%v", err)
 		}
 	}
-	defer db.Close()
 }
 
 // 配当結果
@@ -411,8 +408,6 @@ func UpdateHaito(filename string, db *sql.DB) {
 			log.Fatalf("insertUser db.Exec error err:%v", err)
 		}
 	}
-
-	defer db.Close()
 }
 
 func UpdateFukusho(filename string, db *sql.DB) {
@@ -434,8 +429,6 @@ func UpdateFukusho(filename string, db *sql.DB) {
 			log.Fatalf("Abend fukusho_update:%v", err)
 		}
 	}
-
-	defer db.Close()
 }
 
 func WeatherSql(target_date string, db *sql.DB) {
@@ -531,8 +524,6 @@ func WeatherSql(target_date string, db *sql.DB) {
 
 		time.Sleep(2 * time.Second)
 	}
-
-	defer db.Close()
 }
 
 func RaceType(filename string, racetype int, db *sql.DB) {

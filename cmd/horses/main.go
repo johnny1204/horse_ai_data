@@ -15,7 +15,7 @@ import (
 	ini "gopkg.in/ini.v1"
 
 	"main/internal/afterrace"
-	"main/internal/data"
+	"main/internal/gencsv"
 	"main/internal/netkeiba"
 	"main/internal/newrace"
 	"main/pkg/config"
@@ -56,21 +56,21 @@ func main() {
 		log.Fatalf("main sql.Open error err:%v", err)
 	}
 
-	create_new_race(db)
-	after_race(db)
-	haitou(db)
-	chihou(db)
-	update_horse(db)
-	get_model_date("2022-06-03", db)
+	// create_new_race(db)
+	// after_race(db)
+	// haitou(db)
+	// chihou(db)
+	// update_horse(db)
+	get_model_date("2022-12-04", db)
 }
 
 // 新規レース登録 → 血統 → 調教
 func create_new_race(db *sql.DB) {
-	newrace.CreateNewRace("test.csv", db)
-	newrace.CreateHorseData(db)
-	newrace.TrainingData("2022-06-03", Config, db)
-
 	defer db.Close()
+
+	newrace.CreateNewRace("all20221204.csv", db)
+	// newrace.CreateHorseData(db)
+	newrace.TrainingData("2022-12-04", Config, db)
 }
 
 func update_horse(db *sql.DB) {
@@ -117,23 +117,25 @@ func update_horse(db *sql.DB) {
 }
 
 func get_model_date(date string, db *sql.DB) {
-	data.GenerateData(date, db)
+	gencsv.GenerateData(date, db)
 }
 
 // レース後データ
 func after_race(db *sql.DB) {
-	// afterrace.SpeedIndex("2022-06-03", db)
-	// afterrace.UpdateHorseRace("test.csv", db)
-	// afterrace.UpdateRap("raptest.csv", db)
-	// afterrace.WeatherSql("2022-06-03", db)
+	defer db.Close()
+
+	// afterrace.SpeedIndex("2022-11-26", db)
+	// afterrace.UpdateHorseRace("all20221127.csv", db)
+	// afterrace.UpdateRap("rap20221127.csv", db)
+	// afterrace.WeatherSql("2022-11-26", db)
 	// afterrace.RaceType("hande.csv", 1, db)
-	// netkeiba.GetNetKeibaData("test", db)
+	// netkeiba.GetNetKeibaData("2022-11-26", Config, db)
 	netkeiba.CreateNetkeibaDetail(db)
 	netkeiba.Start(db)
 }
 
 func haitou(db *sql.DB) {
-	// afterrace.UpdateHaito("all20220909.csv", db)
+	// afterrace.UpdateHaito("all20221002.csv", db)
 	// afterrace.UpdateFukusho("fukusho20220909_fukusho.csv", db)
 	// afterrace.ChihouHaitou(db)
 	afterrace.UpdateChihouHaitou(db)
@@ -154,6 +156,7 @@ func compi_update() {
 	if err != nil {
 		log.Fatalf("main sql.Open error err:%v", err)
 	}
+	defer db.Close()
 
 	for _, h := range compis[0:] {
 		_, err := db.Exec(
@@ -168,6 +171,4 @@ func compi_update() {
 			log.Fatalf("compi_update db.Exec error err:%v", err)
 		}
 	}
-
-	defer db.Close()
 }

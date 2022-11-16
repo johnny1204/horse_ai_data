@@ -15,7 +15,7 @@ import (
 var races []domain.NewRace
 
 func CreateNewRace(filename string, db *sql.DB) {
-	new_race(filename, db)
+	// new_race(filename, db)
 	horse_detail_sql(filename, db)
 }
 
